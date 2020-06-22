@@ -13,10 +13,10 @@ const convertToDates = obj => {
 }
 
 let timings = {
-	Fajr: "03:45",
+	// Fajr: "03:45",
 	// Sunrise: '05:25',
-	Dhuhr: "12:58",
-	Asr: "16:58",
+	// Dhuhr: "12:56",
+	Asr: "16:59",
 	// Sunset: '20:31',
 	Maghrib: "20:31",
 	Isha: "22:11",
@@ -49,17 +49,17 @@ const playAdhan = (isFajr = false) => {
 	const client = new ChromecastAPI();
 
 	client.on("device", function (device) {
-		if (device.friendlyName == "Attic Wifi") {
+		// if (device.friendlyName == "1st Floor speaker") {
 			var mediaURL = isFajr ?
       "https://res.cloudinary.com/ddakrweyq/video/upload/v1592809375/fajr_adhan_ptbjhq.mp3" :
-      "https://res.cloudinary.com/ddakrweyq/video/upload/v1592805396/videoplayback_lc4sxo.mp4";
+      "https://res.cloudinary.com/ddakrweyq/video/upload/v1592860533/videoplayback_1_jndba1.mp4";
 
 			device.play(mediaURL, function (err) {
 				if (err) {
           console.log(err);
 				}
 			});
-		}
+		// }
 	});
 };
 
