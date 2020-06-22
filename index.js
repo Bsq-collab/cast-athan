@@ -45,13 +45,14 @@ const getTimes = () => {
 		});
 };
 
-const playAdhan = () => {
+const playAdhan = (isFajr = false) => {
 	const client = new ChromecastAPI();
 
 	client.on("device", function (device) {
 		if (device.friendlyName == "Attic Wifi") {
-			var mediaURL =
-				"https://res.cloudinary.com/ddakrweyq/video/upload/v1592805396/videoplayback_lc4sxo.mp4";
+			var mediaURL = isFajr ?
+      "https://res.cloudinary.com/ddakrweyq/video/upload/v1592809375/fajr_adhan_ptbjhq.mp3" :
+      "https://res.cloudinary.com/ddakrweyq/video/upload/v1592805396/videoplayback_lc4sxo.mp4";
 
 			device.play(mediaURL, function (err) {
 				if (err) {
@@ -66,7 +67,7 @@ const checkTime = () => {
 	const now = new Date();
 	for (key in timings) {
 		if (timings[key] < now) {
-			playAdhan();
+			playAdhan( key === "Fajr" );
 			delete timings[key];
 		}
 	}
