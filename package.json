@@ -1,4 +1,10 @@
 {
+	"name": "cast-athan",
+	"version": "1.0.0",
+	"dependencies": {
+		"axios": "^0.19.2",
+		"chromecast-api": "^0.3.3"
+	},
 	"prettier": {
 		"useTabs": true,
 		"printWidth": 60,
