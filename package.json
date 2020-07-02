@@ -1,6 +1,9 @@
 {
 	"name": "cast-athan",
 	"version": "1.0.0",
+	"scripts": {
+		"start": "node index.js"
+	}
 	"dependencies": {
 		"axios": "^0.19.2",
 		"chromecast-api": "^0.3.3"
