@@ -1,4 +1,22 @@
 const ChromecastAPI = require("chromecast-api");
+const fs = require("fs");
+
+let numErrors = 0;
+
+const logError = (err, helpfulInfo) => {
+	const fileName = "error-" + numErrors; // hehe
+
+	fs.writeFile(
+		fileName,
+		helpfulInfo + "\n" + err.stack,
+		saveError => {
+			if(saveError){
+				console.error(saveError);
+			}
+		}
+	);
+
+}
 
 const getMidnight = () => {
 	const msInDay = 60 * 60 * 24 * 1000;
@@ -54,8 +72,9 @@ const getTimes = () => {
 			timings = newTimings;
 
 			convertToDates(timings);
+			console.log("Updated prayer times list at "+ new Date());
 		})
-		.catch(console.log)
+		.catch(err => logError(err, "Fetching the prayer times at " + new Date()))
 		.finally(() => {
 			setTimeout(
 				getTimes,
@@ -82,7 +101,7 @@ const playAdhan = (isFajr = false) => {
 
 			device.play(mediaURL, function (err) {
 				if (err) {
-					console.log(err);
+					logError(err, "When playing adhan on " + device.friendlyName);
 				}
 			});
 		}
@@ -93,6 +112,7 @@ const checkTime = () => {
 	const now = new Date();
 	for (key in timings) {
 		if (timings[key] < now) {
+			console.log("attempting to play adhan");
 			playAdhan(key === "Fajr");
 			delete timings[key];
 		}
