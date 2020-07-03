@@ -2,26 +2,28 @@ const ChromecastAPI = require("chromecast-api");
 
 const getMidnight = () => {
 	const msInDay = 60 * 60 * 24 * 1000;
-	const tomorrowDate = new Date( new Date().getTime() + msInDay );
+	const tomorrowDate = new Date(
+		new Date().getTime() + msInDay
+	);
 
 	tomorrowDate.setHours(0);
 	tomorrowDate.setMinutes(0);
 	tomorrowDate.setSeconds(0);
 	return tomorrowDate;
-}
+};
 
-const convertToDates = obj => {
+const convertToDates = (obj) => {
 	for (key in obj) {
 		const timeArray = obj[key]
-		.split(":")
-		.map((i) => Number(i));
-		
+			.split(":")
+			.map((i) => Number(i));
+
 		const timeDate = new Date();
 		timeDate.setHours(timeArray[0]);
 		timeDate.setMinutes(timeArray[1]);
 		obj[key] = timeDate;
 	}
-}
+};
 
 let timings = {
 	// Fajr: "03:45",
@@ -35,7 +37,6 @@ let timings = {
 	// Midnight: '00:58'
 };
 convertToDates(timings);
-
 
 const axios = require("axios");
 
@@ -52,32 +53,39 @@ const getTimes = () => {
 			delete newTimings.Midnight;
 			timings = newTimings;
 
-      			convertToDates(timings);
+			convertToDates(timings);
 		})
 		.catch(console.log)
 		.finally(() => {
 			setTimeout(
-				getTimes, 
+				getTimes,
 				getMidnight().getTime() - new Date().getTime()
 			);
 		});
 };
-
+const devicesToPlay = [
+	"1st Floor speaker",
+	"Attic speaker",
+	"Attic Wifi",
+	"Basement Wifi",
+	"girls room Wifi",
+	"Master bedroom speaker",
+];
 const playAdhan = (isFajr = false) => {
 	const client = new ChromecastAPI();
 
 	client.on("device", function (device) {
-		// if (device.friendlyName == "1st Floor speaker") {
-			const mediaURL = isFajr ?
-      				"https://res.cloudinary.com/ddakrweyq/video/upload/v1592809375/fajr_adhan_ptbjhq.mp3" :
-     				"https://res.cloudinary.com/ddakrweyq/video/upload/v1592860533/videoplayback_1_jndba1.mp4";
+		if (devicesToPlay.includes(device.friendlyName)) {
+			const mediaURL = isFajr
+				? "https://res.cloudinary.com/ddakrweyq/video/upload/v1592809375/fajr_adhan_ptbjhq.mp3"
+				: "https://res.cloudinary.com/ddakrweyq/video/upload/v1592860533/videoplayback_1_jndba1.mp4";
 
 			device.play(mediaURL, function (err) {
 				if (err) {
-          				console.log(err);
+					console.log(err);
 				}
 			});
-		// }
+		}
 	});
 };
 
@@ -85,11 +93,10 @@ const checkTime = () => {
 	const now = new Date();
 	for (key in timings) {
 		if (timings[key] < now) {
-			playAdhan( key === "Fajr" );
+			playAdhan(key === "Fajr");
 			delete timings[key];
 		}
 	}
-	
 };
 
 setInterval(checkTime, 5 * 1000);
