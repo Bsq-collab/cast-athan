@@ -1,5 +1,6 @@
 const ChromecastAPI = require("chromecast-api");
 const fs = require("fs");
+process.title = "athan";
 
 let numErrors = 0;
 
